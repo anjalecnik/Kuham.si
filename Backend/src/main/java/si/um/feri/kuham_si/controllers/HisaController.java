@@ -7,6 +7,7 @@ import si.um.feri.kuham_si.repository.HisaRepository;
 
 @RestController
 @RequestMapping("/hise")
+@CrossOrigin(origins = "http://localhost:3000")
 public class HisaController {
     @Autowired      // poskrbi, da se ob inicializaciji določi vrednost hisaDao itd.
     private HisaRepository hisaDao;
