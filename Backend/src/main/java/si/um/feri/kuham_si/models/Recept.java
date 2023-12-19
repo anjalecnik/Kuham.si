@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.util.Collection;
-
 @Entity
 public class Recept {
     @Id
@@ -17,6 +15,7 @@ public class Recept {
     @JoinColumn(name = "avtor_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     Uporabnik avtor;
+
     public String getNaziv() {
         return naziv;
     }
@@ -39,5 +38,9 @@ public class Recept {
 
     public void setAvtor(Uporabnik avtor) {
         this.avtor = avtor;
+    }
+
+    public Long getId() {
+        return id;
     }
 }
