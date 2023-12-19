@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api";
 import {
-  List,
   ListItem,
   ListItemIcon,
   ListItemText,
@@ -36,7 +35,6 @@ const Sestavine = () => {
   return (
     <div style={{ margin: "5px" }}>
       <h1>Seznam vseh sestavin v bazi</h1>
-      {/* <List>{generate()}</List> */}
       <div>
         <Autocomplete
           multiple
