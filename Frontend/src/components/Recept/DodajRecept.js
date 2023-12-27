@@ -57,7 +57,7 @@ const DodajRecept = () => {
       naziv: naziv,
       opis: opis,
       sestavineSKolicinami: sestavineSKolicinami,
-      idAvtorja: 1,
+      idAvtorja: sessionStorage.getItem("userId"),
     });
   };
 

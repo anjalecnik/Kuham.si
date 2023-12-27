@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api";
-import {
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Autocomplete,
-  TextField,
-} from "@mui/material";
+import { ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import EastIcon from "@mui/icons-material/East";
+import DodajSestavino from "./DodajSestavino";
 
 const Sestavine = () => {
   const [sestavine, setSestavine] = useState([]);
@@ -33,24 +28,12 @@ const Sestavine = () => {
   }
 
   return (
-    <div style={{ margin: "5px" }}>
-      <h1>Seznam vseh sestavin v bazi</h1>
-      <div>
-        <Autocomplete
-          multiple
-          id="seznam-sestavin"
-          options={sestavine}
-          getOptionLabel={(option) => option.naziv}
-          filterSelectedOptions
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Dodaj sestavine"
-              placeholder="Sestavine"
-            />
-          )}
-        />
+    <div>
+      <div style={{ margin: "5px" }}>
+        <h1>Seznam vseh sestavin v bazi</h1>
+        <div>{generate()}</div>
       </div>
+      <DodajSestavino />
     </div>
   );
 };

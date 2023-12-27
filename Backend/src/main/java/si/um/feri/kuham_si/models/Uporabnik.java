@@ -12,7 +12,7 @@ public class Uporabnik {
     private Long id;
     private String ime;
     private String priimek;
-    private String uporabnisko_ime;
+    private String uporabniskoIme;
     private String geslo;
     private String email;
 
@@ -40,14 +40,6 @@ public class Uporabnik {
         this.priimek = priimek;
     }
 
-    public String getUporabnisko_ime() {
-        return uporabnisko_ime;
-    }
-
-    public void setUporabnisko_ime(String uporabnisko_ime) {
-        this.uporabnisko_ime = uporabnisko_ime;
-    }
-
     public String getGeslo() {
         return geslo;
     }
@@ -65,4 +57,7 @@ public class Uporabnik {
     }
 
 
+    public String getUporabniskoIme() {
+        return uporabniskoIme;
+    }
 }

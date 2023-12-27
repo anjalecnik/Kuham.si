@@ -5,10 +5,12 @@ import PageNotFound from "../PageNotFound/PageNotFound";
 import DodajSestavino from "../Sestavine/DodajSestavino";
 import Sestavine from "../Sestavine/Sestavine";
 import DodajRecept from "../Recept/DodajRecept";
+import Authentiction from "../Authentication/Authentication";
 
 export default function Routing() {
   return (
     <Routes>
+      <Route path="authentication" element={<Authentiction />} />
       <Route path="sestavine" element={<Sestavine />} />
       <Route path="sestavine/dodaj" element={<DodajSestavino />} />
 
