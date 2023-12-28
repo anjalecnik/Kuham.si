@@ -23,6 +23,7 @@ const Authentiction = () => {
       })
       .then((response) => {
         sessionStorage.setItem("userId", response.data);
+        window.location.href = "http://localhost:3000/recepti";
       });
   };
 
@@ -37,6 +38,7 @@ const Authentiction = () => {
       })
       .then((response) => {
         sessionStorage.setItem("userId", response.data);
+        window.location.href = "http://localhost:3000/recepti";
       });
   };
 

@@ -7,19 +7,34 @@ import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Dish from "../../assets/img/food-plate-vector-png-file-hd.png";
 
 const Recepti = () => {
   const [recepti, setRecepti] = useState([]);
+  const [priljubljeni, setPriljubljeni] = useState([]);
+
+  const pridobiPriljubljene = () => {
+    const userId = sessionStorage.getItem("userId");
+    if (userId) {
+      api
+        .get(`/priljubljeni-recepti?uporabnikId=${userId}`, {
+          timeout: 5000,
+        })
+        .then((response) => {
+          setPriljubljeni(response.data);
+        })
+        .catch((error) => {
+          console.error("Priljubljeni recepti", error);
+        });
+    }
+  };
 
   useEffect(() => {
     const pridobiRecepte = () => {
@@ -27,7 +42,9 @@ const Recepti = () => {
         setRecepti(response.data);
       });
     };
+
     pridobiRecepte();
+    pridobiPriljubljene();
   }, []);
 
   function generate() {
@@ -60,7 +77,36 @@ const Recepti = () => {
             </Typography>
           </CardContent>
           <CardActions disableSpacing>
-            <IconButton aria-label="add to favorites">
+            <IconButton
+              aria-label="add to favorites"
+              onClick={() => {
+                api
+                  .post("/priljubljeni-recepti/dodaj-med-priljubljene", {
+                    idRecepta: recept.id,
+                    idUporabnika: sessionStorage.getItem("userId"),
+                  })
+                  .then((response) => {
+                    const noviPriljubljeni = [
+                      ...priljubljeni,
+                      { recept: { id: recept.id } },
+                    ];
+                    setPriljubljeni(noviPriljubljeni);
+                  });
+              }}
+              style={{
+                color: priljubljeni.some(
+                  (entry) => entry.recept.id === recept.id
+                )
+                  ? red[500]
+                  : "inherit",
+                disabled: priljubljeni.some(
+                  (entry) => entry.recept.id === recept.id
+                )
+                  ? true
+                  : false,
+                display: sessionStorage.getItem("userId") ? "block" : "none",
+              }}
+            >
               <FavoriteIcon />
             </IconButton>
             <IconButton aria-label="share">
