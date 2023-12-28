@@ -7,3 +7,10 @@
   flex: 1;
   margin-top: 2vw;
 }
+
+.dish-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
