@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+}
+
+.content {
+  margin-left: 17vw;
+  flex: 1;
+  margin-top: 2vw;
+}
