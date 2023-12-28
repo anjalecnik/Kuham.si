@@ -21,7 +21,6 @@ public class UporabnikController {
                 logInRequest.getGeslo()
         ).orElseThrow(() -> new EntityNotFoundException("Napačno ime ali geslo"));
 
-
         return uporabnik.getId();
     }
 
