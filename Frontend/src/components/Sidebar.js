@@ -15,7 +15,7 @@ const Sidebar = () => {
         className="logo"
         alt="Logo"
       />
-      <Link to="/recept" className="sidebar-link">
+      <Link to="/recepti" className="sidebar-link">
         Recepti
       </Link>
       <ul className="submenu">

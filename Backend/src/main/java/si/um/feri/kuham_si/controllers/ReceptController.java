@@ -31,6 +31,11 @@ public class ReceptController {
     @Autowired
     private SestavinaRepository sestavinaDao;
 
+    @GetMapping
+    public Iterable<Recept> vrniRecepte() {
+        Iterable<Recept> recepti = receptDao.findAll();
+        return recepti;
+    }
 
     @PostMapping("/ustvari-recept")
     public Map dodajRecept(@RequestBody ReceptRequest receptRequest) {
