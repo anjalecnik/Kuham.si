@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import api from "../../services/api";
 import { Button } from "@mui/material";
 import "../../assets/css/authentication.css";
@@ -23,7 +23,58 @@ const Authentiction = () => {
       })
       .then((response) => {
         sessionStorage.setItem("userId", response.data);
-        window.location.href = "http://localhost:3000/recepti";
+
+        // Preverjanje ali imajo vse sestavine podatke iz Edmam API-ja
+        api.get("/sestavina/edmam-api").then((response) => {
+          const arraySestavinBrezEdmamPodatkov = response.data.map(
+            (item) => `${item.kolicina} ${item.enota} ${item.naziv}`
+          );
+          if (arraySestavinBrezEdmamPodatkov.length !== 0) {
+            fetch(
+              "https://api.edamam.com/api/nutrition-details?app_id=aa281a4d&app_key=2a0993b62275abc008d35e9af68cae7e",
+              {
+                method: "POST",
+                body: JSON.stringify({
+                  ingr: arraySestavinBrezEdmamPodatkov,
+                }),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            )
+              .then((edmamApiResponse) => edmamApiResponse.json())
+              .then((edmamData) => {
+                const arraySestavinSPodatki = [];
+
+                edmamData.ingredients.forEach((ingredient) => {
+                  const parsedInfo = ingredient.parsed[0];
+
+                  const sestavinaObjekt = {
+                    quantity: parsedInfo.quantity,
+                    measure: parsedInfo.measure,
+                    food: parsedInfo.foodMatch,
+                    weight: parsedInfo.weight,
+                    enerc_KCAL: parsedInfo.nutrients.ENERC_KCAL.quantity,
+                    chocdf: parsedInfo.nutrients.CHOCDF.quantity,
+                    fat: parsedInfo.nutrients.FAT.quantity,
+                    procnt: parsedInfo.nutrients.PROCNT.quantity,
+                  };
+                  arraySestavinSPodatki.push(sestavinaObjekt);
+                });
+
+                api
+                  .post(
+                    "/sestavina/shrani-edmam-podatke",
+                    arraySestavinSPodatki
+                  )
+                  .then(() => {
+                    window.location.href = "http://localhost:3000/recepti";
+                  });
+              });
+          } else {
+            window.location.href = "http://localhost:3000/recepti";
+          }
+        });
       });
   };
 
