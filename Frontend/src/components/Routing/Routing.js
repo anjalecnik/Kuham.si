@@ -17,6 +17,7 @@ export default function Routing() {
       <Route path="sestavine" element={<Sestavine />} />
       <Route path="sestavine/dodaj" element={<DodajSestavino />} />
 
+      <Route path="" element={<Recepti />} />
       <Route path="recepti" element={<Recepti />} />
       <Route path="recepti/:id" element={<PregledRecepta />} />
       <Route path="recept/dodaj" element={<DodajRecept />} />
