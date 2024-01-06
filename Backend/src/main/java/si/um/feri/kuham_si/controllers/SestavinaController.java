@@ -24,7 +24,13 @@ public class SestavinaController {
     }
 
     @PostMapping("/ustvari-sestavino")
-    public Sestavina ustvariSestavino(@RequestBody Sestavina sestavina) {
+    public Sestavina ustvariSestavino(@RequestBody EdmamRequestIngredient edmamRequestIngredient) {
+        Sestavina sestavina = new Sestavina();
+        sestavina.setNaziv(edmamRequestIngredient.getFood());
+        sestavina.setKolicina(edmamRequestIngredient.getQuantity());
+        sestavina.setEnota(edmamRequestIngredient.getMeasure());
+        sestavina.setEdmamPodatki(edmamRequestIngredient.toString());
+
         return sestavinaDao.save(sestavina);
     }
 
