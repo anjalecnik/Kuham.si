@@ -40,7 +40,7 @@ public class PriljubljeniReceptiController {
         priljubljeniReceptiDao.save(priljubljenRecept);
     }
 
-    @GetMapping
+    @GetMapping()
     public Iterable<PriljubljeniRecepti> vrniPriljubljeneRecepte(@RequestParam Long uporabnikId) {
         Iterable<PriljubljeniRecepti> priljubljeniRecepti = priljubljeniReceptiDao.findByUporabnik_Id(uporabnikId);
         return priljubljeniRecepti;

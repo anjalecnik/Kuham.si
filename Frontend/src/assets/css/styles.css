@@ -1,5 +1,6 @@
 .container {
   display: flex;
+  flex: 1;
 }
 
 .content {
@@ -13,4 +14,24 @@
   flex-wrap: wrap;
   gap: 16px;
   justify-content: center;
+}
+
+.div-left {
+  float: left;
+  max-width: 40vw;
+  overflow: hidden;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.div-right {
+  float: right;
+  max-width: 40vw;
+  margin-right: 17vw;
+}
+
+.long-text {
+  overflow: hidden;
+  white-space: normal;
+  word-wrap: break-word;
 }

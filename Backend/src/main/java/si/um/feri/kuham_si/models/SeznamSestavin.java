@@ -32,4 +32,12 @@ public class SeznamSestavin {
     public void setSestavina(Sestavina sestavina) {
         this.sestavina = sestavina;
     }
+
+    public int getKolicina() {
+        return kolicina;
+    }
+
+    public Sestavina getSestavina() {
+        return sestavina;
+    }
 }

@@ -15,6 +15,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Dish from "../../assets/img/food-plate-vector-png-file-hd.png";
+import { Link } from "react-router-dom";
 
 const Recepti = () => {
   const [recepti, setRecepti] = useState([]);
@@ -50,7 +51,7 @@ const Recepti = () => {
   function generate() {
     return recepti.map((recept, index) => (
       <div key={index} style={{ flexBasis: "20vw", margin: "8px" }}>
-        <Card sx={{ minWidth: "26vw" }} key={index}>
+        <Card sx={{ width: "26vw" }} key={index}>
           <CardHeader
             avatar={
               <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -65,14 +66,21 @@ const Recepti = () => {
             title={recept.naziv}
             subheader={recept.avtor.uporabniskoIme}
           />
-          <CardMedia
-            component="img"
-            height="194"
-            image={Dish}
-            alt="Fotografija jedi"
-          />
+          <Link to={`/recepti/${recept.id}`} style={{ textDecoration: "none" }}>
+            <CardMedia
+              component="img"
+              height="194"
+              image={Dish}
+              alt="Fotografija jedi"
+            />
+          </Link>
           <CardContent>
-            <Typography variant="body2" color="text.secondary">
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              className="long-text"
+              sx={{ height: "2.2vw" }}
+            >
               {recept.opis}
             </Typography>
           </CardContent>

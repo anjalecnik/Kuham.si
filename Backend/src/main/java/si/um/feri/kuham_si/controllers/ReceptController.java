@@ -8,6 +8,7 @@ import si.um.feri.kuham_si.models.Sestavina;
 import si.um.feri.kuham_si.models.SeznamSestavin;
 import si.um.feri.kuham_si.models.Uporabnik;
 import si.um.feri.kuham_si.models.dto.ReceptRequest;
+import si.um.feri.kuham_si.models.dto.ReceptResponse;
 import si.um.feri.kuham_si.repository.ReceptRepository;
 import si.um.feri.kuham_si.repository.SestavinaRepository;
 import si.um.feri.kuham_si.repository.SeznamSestavinRepository;
@@ -67,5 +68,19 @@ public class ReceptController {
         }
 
         return receptRequest.getSestavineSKolicinami();
+    }
+
+    @GetMapping("/pridobi-recept")
+    public ReceptResponse vrniRecept(@RequestParam Long receptId) {
+        Recept recept = receptDao.findById(receptId)
+                .orElseThrow(() -> new EntityNotFoundException("Recept z id " + receptId + " ne obstaja"));
+
+        Iterable<SeznamSestavin> seznamSestavin = seznamSestavinDao.findAllByRecept_Id(receptId);
+
+        ReceptResponse response = new ReceptResponse();
+        response.setRecept(recept);
+        response.setSeznamSestavin(seznamSestavin);
+
+        return response;
     }
 }
