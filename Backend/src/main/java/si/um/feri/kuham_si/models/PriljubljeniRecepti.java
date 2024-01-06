@@ -13,10 +13,26 @@ public class PriljubljeniRecepti {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uporabnik_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    Uporabnik avtor;
+    Uporabnik uporabnik;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recept_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     Recept recept;
+
+    public void setUporabnik(Uporabnik uporabnik) {
+        this.uporabnik = uporabnik;
+    }
+
+    public void setRecept(Recept recept) {
+        this.recept = recept;
+    }
+
+    public Uporabnik getUporabnik() {
+        return uporabnik;
+    }
+
+    public Recept getRecept() {
+        return recept;
+    }
 }

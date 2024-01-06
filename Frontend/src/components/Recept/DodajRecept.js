@@ -31,7 +31,9 @@ const DodajRecept = () => {
           type="number"
           InputProps={{
             endAdornment: (
-              <InputAdornment position="end">{sestavina.enota}</InputAdornment>
+              <InputAdornment position="end">
+                {sestavina.kolicina} {sestavina.enota}
+              </InputAdornment>
             ),
           }}
           style={{ marginTop: "15px" }}

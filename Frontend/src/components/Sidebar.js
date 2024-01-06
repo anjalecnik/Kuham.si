@@ -2,6 +2,7 @@ import React from "react";
 import "../assets/css/sidebar.css";
 import Logo from "../assets/img/PngItem_3944726.png";
 import { Link } from "react-router-dom";
+import LogOut from "../assets/img/log-out.png";
 
 const Sidebar = () => {
   return (
@@ -15,12 +16,12 @@ const Sidebar = () => {
         className="logo"
         alt="Logo"
       />
-      <Link to="/recept" className="sidebar-link">
+      <Link to="/recepti" className="sidebar-link">
         Recepti
       </Link>
       <ul className="submenu">
         <li>
-          <Link to="/recept" className="submenu-link">
+          <Link to="/recepti" className="submenu-link">
             Pregled receptov
           </Link>
         </li>
@@ -46,9 +47,27 @@ const Sidebar = () => {
         </li>
       </ul>
       <div style={{ marginTop: "auto", marginBottom: "10px" }}>
-        <Link to="/authentication" className="sidebar-link">
-          Prijavi se
-        </Link>
+        {sessionStorage.getItem("userId") ? (
+          <img
+            src={LogOut}
+            style={{
+              width: "15%",
+              marginRight: "5%",
+              float: "right",
+              cursor: "pointer",
+            }}
+            className="logo"
+            alt="Logo"
+            onClick={() => {
+              sessionStorage.removeItem("userId");
+              window.location.reload();
+            }}
+          />
+        ) : (
+          <Link to="/authentication" className="sidebar-link">
+            Prijavi se
+          </Link>
+        )}
       </div>
     </div>
   );

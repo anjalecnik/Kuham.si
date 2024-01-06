@@ -1,9 +1,8 @@
 package si.um.feri.kuham_si.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import si.um.feri.kuham_si.models.SeznamSestavin;
 import si.um.feri.kuham_si.repository.SeznamSestavinRepository;
 
 @RestController
@@ -12,4 +11,10 @@ import si.um.feri.kuham_si.repository.SeznamSestavinRepository;
 public class SeznamSestavinController {
     @Autowired
     private SeznamSestavinRepository seznamSestavinDao;
+
+    @GetMapping("/pridobi-sestavine-recepta")
+    public Iterable<SeznamSestavin> vrniSeznamSestavin(@RequestParam Long receptId) {
+        Iterable<SeznamSestavin> seznamSestavin = seznamSestavinDao.findAllByRecept_Id(receptId);
+        return seznamSestavin;
+    }
 }

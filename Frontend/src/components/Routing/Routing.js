@@ -7,6 +7,7 @@ import Sestavine from "../Sestavine/Sestavine";
 import DodajRecept from "../Recept/DodajRecept";
 import Authentiction from "../Authentication/Authentication";
 import Recepti from "../Recept/Recepti";
+import PregledRecepta from "../Recept/PregledRecepta";
 
 export default function Routing() {
   return (
@@ -17,6 +18,7 @@ export default function Routing() {
       <Route path="sestavine/dodaj" element={<DodajSestavino />} />
 
       <Route path="recepti" element={<Recepti />} />
+      <Route path="recepti/:id" element={<PregledRecepta />} />
       <Route path="recept/dodaj" element={<DodajRecept />} />
 
       <Route path="*" element={<PageNotFound />} />

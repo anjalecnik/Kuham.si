@@ -4,4 +4,7 @@ import org.springframework.data.repository.CrudRepository;
 import si.um.feri.kuham_si.models.Sestavina;
 
 public interface SestavinaRepository extends CrudRepository<Sestavina, Long> {
+    Iterable<Sestavina> findAllByEdmamPodatkiIsNull();
+
+    Sestavina findByNazivAndKolicina(String naziv, double kolicina);
 }

@@ -3,6 +3,7 @@ package si.um.feri.kuham_si.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import si.um.feri.kuham_si.models.Sestavina;
+import si.um.feri.kuham_si.models.dto.EdmamRequestIngredient;
 import si.um.feri.kuham_si.repository.SestavinaRepository;
 
 @RestController
@@ -17,8 +18,28 @@ public class SestavinaController {
         return sestavinaDao.findAll();
     }
 
+    @GetMapping("/edmam-api")
+    public Iterable<Sestavina> sestavineBrezEdmamAPIPodatkov() {
+        return sestavinaDao.findAllByEdmamPodatkiIsNull();
+    }
+
     @PostMapping("/ustvari-sestavino")
-    public Sestavina ustvariSestavino(@RequestBody Sestavina sestavina) {
+    public Sestavina ustvariSestavino(@RequestBody EdmamRequestIngredient edmamRequestIngredient) {
+        Sestavina sestavina = new Sestavina();
+        sestavina.setNaziv(edmamRequestIngredient.getFood());
+        sestavina.setKolicina(edmamRequestIngredient.getQuantity());
+        sestavina.setEnota(edmamRequestIngredient.getMeasure());
+        sestavina.setEdmamPodatki(edmamRequestIngredient.toString());
+
         return sestavinaDao.save(sestavina);
+    }
+
+    @PostMapping("/shrani-edmam-podatke")
+    public void shraniEdmamPodatke(@RequestBody EdmamRequestIngredient[] edmamRequestIngredients) {
+        for (EdmamRequestIngredient ingredient : edmamRequestIngredients) {
+            Sestavina sestavina = sestavinaDao.findByNazivAndKolicina(ingredient.getFood(), ingredient.getQuantity());
+            sestavina.setEdmamPodatki(ingredient.toString());
+            sestavinaDao.save(sestavina);
+        }
     }
 }

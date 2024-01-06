@@ -13,9 +13,9 @@ public class Sestavina {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String naziv;
-    private double teza;
+    private double kolicina;
     private String enota;
-    private String kaloricna_vrednost;
+    private String edmamPodatki;
 
     public Long getId() {
         return id;
@@ -29,12 +29,12 @@ public class Sestavina {
         this.naziv = naziv;
     }
 
-    public double getTeza() {
-        return teza;
+    public double getKolicina() {
+        return kolicina;
     }
 
-    public void setTeza(double teza) {
-        this.teza = teza;
+    public void setKolicina(double kolicina) {
+        this.kolicina = kolicina;
     }
 
     public String getEnota() {
@@ -45,11 +45,11 @@ public class Sestavina {
         this.enota = enota;
     }
 
-    public String getKaloricna_vrednost() {
-        return kaloricna_vrednost;
+    public String getEdmamPodatki() {
+        return edmamPodatki;
     }
 
-    public void setKaloricna_vrednost(String kaloricna_vrednost) {
-        this.kaloricna_vrednost = kaloricna_vrednost;
+    public void setEdmamPodatki(String edmamPodatki) {
+        this.edmamPodatki = edmamPodatki;
     }
 }
