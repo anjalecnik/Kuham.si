@@ -25,7 +25,11 @@ const Sidebar = () => {
             Pregled receptov
           </Link>
         </li>
-        <li>
+        <li
+          style={{
+            display: sessionStorage.getItem("userId") ? "block" : "none",
+          }}
+        >
           <Link to="/recept/dodaj" className="submenu-link">
             Dodaj recept
           </Link>
@@ -40,7 +44,11 @@ const Sidebar = () => {
             Pregled sestavin
           </Link>
         </li>
-        <li>
+        <li
+          style={{
+            display: sessionStorage.getItem("userId") ? "block" : "none",
+          }}
+        >
           <Link to="/sestavine/dodaj" className="submenu-link">
             Dodaj sestavino
           </Link>

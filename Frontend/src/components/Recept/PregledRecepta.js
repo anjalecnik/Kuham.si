@@ -89,39 +89,47 @@ const PregledRecepta = () => {
               {recept.opis}
               <hr style={{ border: "1px solid #B4B4B4" }} />
 
-              <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell></TableCell>
-                      <TableCell align="right">
-                        Energijska vrednost&nbsp;(kcal)
-                      </TableCell>
-                      <TableCell align="right">Maščobe&nbsp;(g)</TableCell>
-                      <TableCell align="right">
-                        Ogljikovi hidrati&nbsp;(g)
-                      </TableCell>
-                      <TableCell align="right">Beljakovine&nbsp;(g)</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow
-                      key={recept.naziv ? recept.naziv : ""}
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                      }}
-                    >
-                      <TableCell component="th" scope="row">
-                        {recept.naziv ? recept.naziv : ""}
-                      </TableCell>
-                      <TableCell align="right">{sumENERC_KCAL}</TableCell>
-                      <TableCell align="right">{sumFAT}</TableCell>
-                      <TableCell align="right">{sumCHOCDF}</TableCell>
-                      <TableCell align="right">{sumPROCNT}</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
+              {sessionStorage.getItem("userId") ? (
+                <TableContainer component={Paper}>
+                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell></TableCell>
+                        <TableCell align="right">
+                          Energijska vrednost&nbsp;(kcal)
+                        </TableCell>
+                        <TableCell align="right">Maščobe&nbsp;(g)</TableCell>
+                        <TableCell align="right">
+                          Ogljikovi hidrati&nbsp;(g)
+                        </TableCell>
+                        <TableCell align="right">
+                          Beljakovine&nbsp;(g)
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow
+                        key={recept.naziv ? recept.naziv : ""}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {recept.naziv ? recept.naziv : ""}
+                        </TableCell>
+                        <TableCell align="right">{sumENERC_KCAL}</TableCell>
+                        <TableCell align="right">{sumFAT}</TableCell>
+                        <TableCell align="right">{sumCHOCDF}</TableCell>
+                        <TableCell align="right">{sumPROCNT}</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              ) : (
+                <p>
+                  <i>Za ogled hranilne vrednosti se prijavite!</i>
+                </p>
+              )}
             </div>
 
             <div className="div-right">
