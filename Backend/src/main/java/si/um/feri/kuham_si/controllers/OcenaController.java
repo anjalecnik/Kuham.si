@@ -56,7 +56,6 @@ public class OcenaController {
 
         System.out.println("Komentar iz OcenaRequest: " + ocenaRequest.getKomentar());
 
-        // Saving the rating to the database
         ocenaDao.save(ocena);
 
         // Response preparation
@@ -100,13 +99,10 @@ public class OcenaController {
                     ocena.setKomentar(komentar);
                 }
 
-                // Dodajte morebitno logiko za posodobitev drugih podatkov ocene, če je potrebno
-
                 ocenaDao.save(ocena);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            // Dodajte morebitno obdelavo napake
         }
     }
 }

@@ -110,9 +110,7 @@ const PregledRecepta = () => {
         datum: new Date().toISOString()
       })
       .then((response) => {
-        //api.get(`/recept/pridobi-ocene?receptId=${idRecepta}`).then((response) => {
-        //setOcene(response.data);
-        //});
+        window.location.reload();
       });
   };
 
@@ -243,6 +241,8 @@ const PregledRecepta = () => {
             </div><br />
 
             <div style={{ clear: "both", marginLeft: "10px", marginBottom: "20px" }}>
+            {sessionStorage.getItem("userId") && (
+    <>
               <h2>Dodaj komentar</h2>
               <form style={{ display: "flex", flexDirection: "column", maxWidth: "300px" }}>
                 <label htmlFor="komentar">Komentar:</label>
@@ -255,6 +255,8 @@ const PregledRecepta = () => {
                   DODAJ
                 </Button>
               </form>
+              </>
+               )}
             </div>
 
             <div style={{ marginLeft: 0, maxWidth: "800px" }}>
@@ -273,10 +275,13 @@ const PregledRecepta = () => {
                     }}
                   >
                     <div>
+                      <p style={{ color: "#B4B4B4" }}>Avtor: {ocena.avtor ? ocena.avtor.uporabniskoIme : ""}</p>
                       <p>Ocena: {ocena.ocena}</p>
                       <p>Komentar: {ocena.komentar}</p>
                       <p>Datum: {ocena.datum}</p>
                     </div>
+                    {ocena.avtor && ocena.avtor.id === parseInt(sessionStorage.getItem("userId"), 10) && (
+  
                     <div style={{ display: "flex", justifyContent: "flex-end" }}>
                       <button
                         style={{
@@ -359,6 +364,7 @@ const PregledRecepta = () => {
                         </div>
                       )}
                     </div>
+                    )}
                   </div>
                 ))}
               </List>
