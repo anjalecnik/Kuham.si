@@ -16,15 +16,29 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { TextField, Button } from "@mui/material";
+
+
+
+
+
+
+
 
 const PregledRecepta = () => {
   const [recept, setRecept] = useState([]);
   const [sestavine, setSestavine] = useState([]);
+  const [ocene, setOcene] = useState([]);
 
   const [sumENERC_KCAL, setSumENERC_KCAL] = useState(0);
   const [sumFAT, setSumFAT] = useState(0);
   const [sumCHOCDF, setSumCHOCDF] = useState(0);
   const [sumPROCNT, setSumPROCNT] = useState(0);
+
+  const [komentar, setKomentar] = useState('');
+  const [novaOcena, setNovaOcena] = useState('');
+  const [editMode, setEditMode] = useState(false);
+  const [editedOcenaId, setEditedOcenaId] = useState('');
 
   useEffect(() => {
     const pridobiRecept = () => {
@@ -66,8 +80,81 @@ const PregledRecepta = () => {
         });
     };
 
+    const pridobiOcene = () => {
+      const idRecepta = new URL(window.location.href).pathname.split("/").pop();
+
+      api
+        .get(`ocena/pridobi-ocene-za-recept?receptId=${idRecepta}`
+        )
+        .then((response) => {
+          setOcene(response.data);
+        });
+    }
+
+    pridobiOcene();
     pridobiRecept();
   }, []);
+
+  const dodajOceno = () => {
+    const idRecepta = new URL(window.location.href).pathname.split("/").pop();
+    const ocenaValue = document.getElementById("ocena").value;
+    const komentarValue = document.getElementById("komentar").value;
+
+
+    api
+      .post(`/ocena/ustvari-oceno`, {
+        idRecepta: idRecepta,
+        ocena: ocenaValue,
+        komentar: komentarValue,
+        idAvtorja: sessionStorage.getItem("userId"),
+        datum: new Date().toISOString()
+      })
+      .then((response) => {
+        //api.get(`/recept/pridobi-ocene?receptId=${idRecepta}`).then((response) => {
+        //setOcene(response.data);
+        //});
+      });
+  };
+
+  const brisiOcena = (id) => {
+    const idRecepta = new URL(window.location.href).pathname.split("/").pop();
+
+    api
+      .delete(`/ocena/ocena/izbrisi-oceno/${id}`)
+      .then((response) => {
+        console.log("Ocena izbrisana:", response.data);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error("Napaka pri brisanju ocene:", error);
+      });
+  };
+
+  const posodobiOcena = () => {
+    if (novaOcena < 1 || novaOcena > 5) {
+      console.error("Napaka: Nova ocena mora biti med 1 in 5.");
+      return;
+    }
+  
+    const idRecepta = new URL(window.location.href).pathname.split("/").pop();
+    api
+      .put(`/ocena/ocena/posodobi-oceno/${editedOcenaId}`, {
+        novaOcena: parseInt(novaOcena),
+        komentar: komentar,
+      })
+      .then((response) => {
+        console.log("Ocena posodobljena:", response.data);
+        window.location.reload();
+        }
+      )
+      .catch((error) => {
+        console.error("Napaka pri posodabljanju ocene:", error);
+      });
+  };
+
+
+
+
 
   return (
     <div className="container">
@@ -144,18 +231,139 @@ const PregledRecepta = () => {
                     </ListItemAvatar>
                     <ListItemText
                       primary={sestavina.sestavina.naziv}
-                      secondary={`Količina: ${sestavina.kolicina}×${
-                        sestavina.sestavina.kolicina
-                      } ${
-                        sestavina.sestavina.enota === "whole"
+                      secondary={`Količina: ${sestavina.kolicina}×${sestavina.sestavina.kolicina
+                        } ${sestavina.sestavina.enota === "whole"
                           ? "kos"
                           : sestavina.sestavina.enota
-                      }`}
+                        }`}
                     />
                   </ListItem>
                 ))}
               </List>
+            </div><br />
+
+            <div style={{ clear: "both", marginLeft: "10px", marginBottom: "20px" }}>
+              <h2>Dodaj komentar</h2>
+              <form style={{ display: "flex", flexDirection: "column", maxWidth: "300px" }}>
+                <label htmlFor="komentar">Komentar:</label>
+                <textarea id="komentar" name="fname" style={{ marginBottom: "10px" }}></textarea>
+
+                <label htmlFor="quantity">Ocena med 1 in 5:</label>
+                <input type="number" id="ocena" name="quantity" min="1" max="5" style={{ marginBottom: "10px" }} />
+
+                <Button variant="contained" color="success" onClick={dodajOceno}>
+                  DODAJ
+                </Button>
+              </form>
             </div>
+
+            <div style={{ marginLeft: 0, maxWidth: "800px" }}>
+              <h3>Pregled ocen</h3>
+              <List>
+                {ocene && ocene.length > 0 && ocene.map((ocena, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      border: "1px solid #ccc",
+                      padding: "10px",
+                      marginBottom: "10px",
+                      background: index % 2 === 0 ? "#f9f9f9" : "#e6e6e6",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div>
+                      <p>Ocena: {ocena.ocena}</p>
+                      <p>Komentar: {ocena.komentar}</p>
+                      <p>Datum: {ocena.datum}</p>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                      <button
+                        style={{
+                          background: "#ff4d4d",
+                          color: "#fff",
+                          padding: "8px 15px",
+                          border: "none",
+                          borderRadius: "5px",
+                          cursor: "pointer",
+                          marginRight: "10px",
+                        }}
+                        onClick={() => brisiOcena(ocena.id)}
+                      >
+                        Izbriši
+                      </button>
+
+                      <button
+                        style={{
+                          background: "#ffd633",
+                          color: "#fff",
+                          padding: "8px 15px",
+                          border: "none",
+                          borderRadius: "5px",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          setEditMode(true);
+                          setEditedOcenaId(ocena.id);
+                        }}
+                      >
+                        Posodobi
+                      </button>
+                      {editMode && (
+                        <div style={{ marginLeft: 0, maxWidth: "800px" }}>
+                          <h3>Posodobi oceno</h3>
+                          <form>
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+                              <label htmlFor="komentar">Komentar:</label>
+                              <textarea
+                                id="komentar"
+                                name="komentar"
+                                value={komentar}
+                                onChange={(e) => setKomentar(e.target.value)}
+                                style={{ width: "90%" }}
+                              ></textarea>
+                            </div>
+
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+                              <label htmlFor="novaOcena">Nova ocena (1-5):</label>
+                              <input
+                                type="number"
+                                id="novaOcena"
+                                name="novaOcena"
+                                min="1"
+                                max="5"
+                                value={novaOcena}
+                                onChange={(e) => setNovaOcena(e.target.value)}
+                                style={{ width: "90%" }}
+                              />
+                            </div>
+
+                            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                              <button
+                                type="button"
+                                style={{
+                                  background: "blue",
+                                  color: "#fff",
+                                  padding: "8px 15px",
+                                  border: "none",
+                                  borderRadius: "5px",
+                                  cursor: "pointer",
+                                  marginTop: "10px",
+                                }}
+                                onClick={posodobiOcena}
+                              >
+                                Potrdi
+                              </button>
+                            </div>
+                          </form>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </List>
+            </div>
+
           </div>
         </div>
       </div>

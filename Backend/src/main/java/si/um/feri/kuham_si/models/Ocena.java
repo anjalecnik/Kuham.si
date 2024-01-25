@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
@@ -45,5 +46,25 @@ public class Ocena {
 
     public void setDatum(Date datum) {
         this.datum = datum;
+    }
+
+    public Uporabnik getAvtor() {
+        return avtor;
+    }
+
+    public void setRecept(Recept recept) {
+        this.recept = recept;
+    }
+
+    public Recept getRecept() {
+        return recept;
+    }
+
+    public void setAvtor(Uporabnik avtor) {
+        this.avtor = avtor;
+    }
+
+    public Long getId() {
+        return id;
     }
 }
