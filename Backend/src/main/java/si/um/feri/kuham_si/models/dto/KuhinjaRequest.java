@@ -1,19 +1,10 @@
-package si.um.feri.kuham_si.models;
-import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.web.bind.annotation.CrossOrigin;
+package si.um.feri.kuham_si.models.dto;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:3000")
-@Entity
-public class Kuhinja {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
+public class KuhinjaRequest {
     private String naziv;
 
     private String lokacija;
@@ -21,19 +12,8 @@ public class Kuhinja {
     private Date datumNastanka;
 
     private String tipKuhinje;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lastnik_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    Kuhar lastnik;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private Map<Long, Integer> sestavineSKolicinami = new HashMap<>();
+    private Long idLastnika;
 
     public String getNaziv() {
         return naziv;
@@ -67,11 +47,19 @@ public class Kuhinja {
         this.tipKuhinje = tipKuhinje;
     }
 
-    public Kuhar getLastnik() {
-        return lastnik;
+    public Map<Long, Integer> getSestavineSKolicinami() {
+        return sestavineSKolicinami;
     }
 
-    public void setLastnik(Kuhar lastnik) {
-        this.lastnik = lastnik;
+    public void setSestavineSKolicinami(Map<Long, Integer> sestavineSKolicinami) {
+        this.sestavineSKolicinami = sestavineSKolicinami;
+    }
+
+    public Long getIdLastnika() {
+        return idLastnika;
+    }
+
+    public void setIdLastnika(Long idLastnika) {
+        this.idLastnika = idLastnika;
     }
 }
