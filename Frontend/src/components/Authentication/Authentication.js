@@ -92,7 +92,7 @@ const Authentiction = () => {
         window.location.href = "http://localhost:3000/recepti";
       });
   };
-  
+
   const logInKuhar = () => {
     api
       .post("/kuhar/log-in", {
@@ -146,11 +146,11 @@ const Authentiction = () => {
                     arraySestavinSPodatki
                   )
                   .then(() => {
-                    window.location.href = "http://localhost:3000/recepti";
+                    window.location.href = "http://localhost:3000/kuhinje";
                   });
               });
           } else {
-            window.location.href = "http://localhost:3000/recepti";
+            window.location.href = "http://localhost:3000/kuhinje";
           }
         });
       });
@@ -167,7 +167,7 @@ const Authentiction = () => {
       })
       .then((response) => {
         sessionStorage.setItem("userId", response.data);
-        window.location.href = "http://localhost:3000/recepti";
+        window.location.href = "http://localhost:3000/kuhinje";
       });
   };
 
