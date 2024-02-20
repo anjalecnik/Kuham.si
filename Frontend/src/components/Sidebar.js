@@ -54,6 +54,22 @@ const Sidebar = () => {
           </Link>
         </li>
       </ul>
+
+      <Link to="/kuhinje" className="sidebar-link">
+        Kuhinje
+      </Link>
+      <ul className="submenu">
+        <li
+          style={{
+            display: sessionStorage.getItem("userId") ? "block" : "none",
+          }}
+        >
+          <Link to="/kuhinje" className="submenu-link">
+            Pregled kuhinj
+          </Link>
+        </li>
+      </ul>
+
       <div style={{ marginTop: "auto", marginBottom: "10px" }}>
         {sessionStorage.getItem("userId") ? (
           <img
