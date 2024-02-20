@@ -15,6 +15,7 @@ public class Uporabnik {
     private String uporabniskoIme;
     private String geslo;
     private String email;
+    private String tipUporabnika;
 
     public Long getId() {
         return id;
@@ -59,5 +60,12 @@ public class Uporabnik {
 
     public String getUporabniskoIme() {
         return uporabniskoIme;
+    }
+    public String getTipUporabnika() {
+        return tipUporabnika;
+    }
+
+    public void setTipUporabnika(String tipUporabnika) {
+        this.tipUporabnika = tipUporabnika;
     }
 }

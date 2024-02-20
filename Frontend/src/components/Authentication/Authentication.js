@@ -14,6 +14,7 @@ const Authentiction = () => {
   const [email, setEmail] = useState("");
   const [uporabniskoImeR, setUporabniskoImeR] = useState("");
   const [gesloR, setGesloR] = useState("");
+  const [kuharOption, setKuharOption] = useState('');
 
   const logIn = () => {
     api
@@ -86,6 +87,7 @@ const Authentiction = () => {
         uporabniskoIme: uporabniskoImeR,
         geslo: gesloR,
         email: email,
+        tipUporabnika: kuharOption,
       })
       .then((response) => {
         sessionStorage.setItem("userId", response.data);
@@ -168,89 +170,116 @@ const Authentiction = () => {
       .then((response) => {
         sessionStorage.setItem("userId", response.data);
         window.location.href = "http://localhost:3000/kuhinje";
-      });
+      }); 
   };
 
   return (
     <div id="center">
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-      <form className="form" style={{ marginLeft: "15px"}}>
-        <p className="form-title">Prijavi se v svoj račun</p>
-        <div className="input-container">
-          <input
-            type="text"
-            placeholder="Uporabniško ime"
-            value={uporabniskoImeP}
-            onChange={(event) => setuporabniskoImeP(event.target.value)}
-          />
-          <span></span>
-        </div>
-        <div className="input-container">
-          <input
-            type="password"
-            placeholder="Geslo"
-            value={gesloP}
-            onChange={(event) => setGesloP(event.target.value)}
-          />
-        </div>
-        <Button variant="contained" color="success" onClick={logIn}>
-          Prijava
-        </Button>
-        <p className="signup-link">Še nimaš računa? Izpolni obrazec na desni</p>
-      </form>
+        <form className="form" style={{ marginLeft: "15px" }}>
+          <p className="form-title">Prijavi se v svoj račun</p>
+          <div className="input-container">
+            <input
+              type="text"
+              placeholder="Uporabniško ime"
+              value={uporabniskoImeP}
+              onChange={(event) => setuporabniskoImeP(event.target.value)}
+            />
+            <span></span>
+          </div>
+          <div className="input-container">
+            <input
+              type="password"
+              placeholder="Geslo"
+              value={gesloP}
+              onChange={(event) => setGesloP(event.target.value)}
+            />
+          </div>
+          <Button variant="contained" color="success" onClick={logIn}>
+            Prijava
+          </Button>
+          <p className="signup-link">Še nimaš računa? Izpolni obrazec na desni</p>
+        </form>
 
-      <form className="form" style={{ marginLeft: "15px"}}>
-        <p className="form-title">Ustvari nov račun</p>
-        <div className="input-container">
+        <form className="form" style={{ marginLeft: "15px" }}>
+          <p className="form-title">Ustvari nov račun</p>
+          <div className="input-container">
+            <input
+              type="text"
+              placeholder="Ime"
+              value={ime}
+              onChange={(event) => setIme(event.target.value)}
+            />
+            <span></span>
+          </div>
+          <div className="input-container">
+            <input
+              type="text"
+              placeholder="Priimek"
+              value={priimek}
+              onChange={(event) => setPriimek(event.target.value)}
+            />
+            <span></span>
+          </div>
+          <div className="input-container">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+            <span></span>
+          </div>
+          <div className="input-container">
+            <input
+              type="text"
+              placeholder="Uporabniško ime"
+              value={uporabniskoImeR}
+              onChange={(event) => setUporabniskoImeR(event.target.value)}
+            />
+            <span></span>
+          </div>
+          <div className="input-container">
+            <input
+              type="password"
+              placeholder="Geslo"
+              value={gesloR}
+              onChange={(event) => setGesloR(event.target.value)}
+            />
+          </div>
+          <div className="input-container">
+        <div style={{ display: "flex", alignItems: "center" }}>
           <input
-            type="text"
-            placeholder="Ime"
-            value={ime}
-            onChange={(event) => setIme(event.target.value)}
+            type="radio"
+            id="kuharOption"
+            name="kuharOption"
+            value="Kuhar"
+            checked={kuharOption === "Kuhar"}
+            onChange={(event)=> setKuharOption(event.target.value)}
+            style={{ marginRight: "5px" }}
           />
-          <span></span>
+          <label htmlFor="kuharOption">Kuhar</label>
         </div>
-        <div className="input-container">
+        <div style={{ display: "flex", alignItems: "center" }}>
           <input
-            type="text"
-            placeholder="Priimek"
-            value={priimek}
-            onChange={(event) => setPriimek(event.target.value)}
+            type="radio"
+            id="uporabnikOption"
+            name="kuharOption"
+            value="Uporabnik"
+            checked={kuharOption === "Uporabnik"}
+            onChange={(event)=> setKuharOption(event.target.value)}
+            style={{ marginRight: "5px" }}
           />
-          <span></span>
+          <label htmlFor="uporabnikOption">Uporabnik</label>
         </div>
-        <div className="input-container">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-          <span></span>
-        </div>
-        <div className="input-container">
-          <input
-            type="text"
-            placeholder="Uporabniško ime"
-            value={uporabniskoImeR}
-            onChange={(event) => setUporabniskoImeR(event.target.value)}
-          />
-          <span></span>
-        </div>
-        <div className="input-container">
-          <input
-            type="password"
-            placeholder="Geslo"
-            value={gesloR}
-            onChange={(event) => setGesloR(event.target.value)}
-          />
-        </div>
-        <Button variant="contained" color="success" onClick={register}>
-          Registracija
-        </Button>
-      </form>
+      </div>
+          <Button variant="contained" color="success" onClick={register}>
+            Registracija
+          </Button>
+        </form>
 
-      <form className="form" style={{ marginLeft: "15px"}}>
+
+        {/* <form className="form" style={{ marginLeft: "15px"}}>
         <p className="form-title">Prijava kuharja</p>
         <div className="input-container">
           <input
@@ -323,11 +352,12 @@ const Authentiction = () => {
         <Button variant="contained" color="success" onClick={registerKuhar}>
           Registracija
         </Button>
-      </form>
+      </form>*/}
       </div>
 
+
     </div>
-    
+
   );
 };
 

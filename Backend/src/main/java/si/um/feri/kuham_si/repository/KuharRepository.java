@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface KuharRepository extends CrudRepository<Kuhar, Long> {
     Optional<Kuhar> findByUporabniskoImeAndGeslo(String uporabniskoIme, String geslo);
+    Optional<Kuhar> findById(Long id);
+    Kuhar findByIme(String imeLastnika);
 }

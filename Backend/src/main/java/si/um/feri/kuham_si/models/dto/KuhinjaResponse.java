@@ -1,15 +1,16 @@
 package si.um.feri.kuham_si.models.dto;
-import si.um.feri.kuham_si.models.Kuhinja;
 
+
+import si.um.feri.kuham_si.models.Kuhinja1;
 
 public class KuhinjaResponse {
-    private Kuhinja kuhinja;
+    private Kuhinja1 kuhinja;
 
-    public Kuhinja getKuhinja() {
+    public Kuhinja1 getKuhinja() {
         return kuhinja;
     }
 
-    public void setKuhinja(Kuhinja kuhinja) {
+    public void setKuhinja(Kuhinja1 kuhinja) {
         this.kuhinja = kuhinja;
     }
 }
