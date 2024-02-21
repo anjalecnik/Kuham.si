@@ -114,4 +114,22 @@ public class ReceptController {
 
         return povprecnaOcena;
     }
+
+    @GetMapping("/po-komentarjih")
+    public Iterable<Recept> vrniReceptePoKomentarjih() {
+        Iterable<Recept> vsiRecepti = receptDao.findAll();
+
+        // Sortiranje receptov po številu komentarjev od najvišjega do najnižjega
+        List<Recept> urejeniRecepti = StreamSupport.stream(vsiRecepti.spliterator(), false)
+                .sorted((r1, r2) -> Integer.compare(steviloKomentarjevRecepta(r2), steviloKomentarjevRecepta(r1)))
+                .collect(Collectors.toList());
+
+        return urejeniRecepti;
+    }
+
+    private int steviloKomentarjevRecepta(Recept recept) {
+        // Pridobitev števila komentarjev za določen recept
+        int steviloKomentarjev = ocenaDao.countByReceptId(recept.getId());
+        return steviloKomentarjev;
+    }
 }

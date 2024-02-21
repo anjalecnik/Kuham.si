@@ -43,4 +43,7 @@ public class Recept {
     public Long getId() {
         return id;
     }
+
+    public void setSteviloKomentarjev(int steviloKomentarjev) {
+    }
 }
