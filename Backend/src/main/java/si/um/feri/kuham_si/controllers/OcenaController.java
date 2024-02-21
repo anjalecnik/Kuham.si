@@ -2,6 +2,7 @@ package si.um.feri.kuham_si.controllers;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
 import si.um.feri.kuham_si.models.Ocena;
 import si.um.feri.kuham_si.models.Recept;
@@ -12,6 +13,9 @@ import si.um.feri.kuham_si.repository.OcenaRepository;
 import si.um.feri.kuham_si.repository.UporabnikRepository;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+
+import javax.mail.internet.MimeMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +34,8 @@ public class OcenaController {
 
     @Autowired
     private ReceptRepository receptDao;
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     @GetMapping
     public Iterable<Ocena> vrniOcene() {
@@ -38,7 +44,7 @@ public class OcenaController {
     }
 
     @PostMapping("/ustvari-oceno")
-    public Map dodajOceno(@RequestBody OcenaRequest ocenaRequest) {
+    public Map<String, Object> dodajOceno(@RequestBody OcenaRequest ocenaRequest) {
         Long avtorId = ocenaRequest.getIdAvtorja();
         Uporabnik uporabnik = uporabnikDao.findById(avtorId)
                 .orElseThrow(() -> new EntityNotFoundException("Uporabnik z id " + avtorId + " ne obstaja"));
@@ -53,9 +59,26 @@ public class OcenaController {
         ocena.setAvtor(uporabnik);
         ocena.setRecept(recept);
 
-        System.out.println("Komentar iz OcenaRequest: " + ocenaRequest.getKomentar());
-
         ocenaDao.save(ocena);
+
+        // Print e-poštni naslov avtorja recepta
+        System.out.println("E-poštni naslov avtorja recepta: " + recept.getAvtor().getEmail());
+
+        // Send email to the author of the recipe
+        String naslov = "Nekdo je ocenil vaš recept!";
+        String sporocilo = "Pozdravljeni " + recept.getAvtor().getIme() + ",\n\nVašemu receptu \"" + recept.getNaziv() + "\" je bila dodana nova ocena.\n\nLep pozdrav,\nVaša ekipa Kuham.si";
+
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(recept.getAvtor().getEmail());
+            message.setSubject(naslov);
+            message.setText(sporocilo);
+            javaMailSender.send(message);
+
+            System.out.println("Email successfully sent to " + recept.getAvtor().getEmail());
+        } catch (Exception e) {
+            System.out.println("Error sending email: " + e.getMessage());
+        }
 
         // Response preparation
         Map<String, Object> response = new HashMap<>();
