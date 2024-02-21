@@ -3,18 +3,15 @@ package si.um.feri.kuham_si.controllers;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import si.um.feri.kuham_si.models.Recept;
-import si.um.feri.kuham_si.models.Sestavina;
-import si.um.feri.kuham_si.models.SeznamSestavin;
-import si.um.feri.kuham_si.models.Uporabnik;
+import si.um.feri.kuham_si.models.*;
 import si.um.feri.kuham_si.models.dto.ReceptRequest;
 import si.um.feri.kuham_si.models.dto.ReceptResponse;
-import si.um.feri.kuham_si.repository.ReceptRepository;
-import si.um.feri.kuham_si.repository.SestavinaRepository;
-import si.um.feri.kuham_si.repository.SeznamSestavinRepository;
-import si.um.feri.kuham_si.repository.UporabnikRepository;
+import si.um.feri.kuham_si.repository.*;
 
 import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/recept")
@@ -31,6 +28,9 @@ public class ReceptController {
 
     @Autowired
     private SestavinaRepository sestavinaDao;
+
+    @Autowired
+    private OcenaRepository ocenaDao;
 
     @GetMapping
     public Iterable<Recept> vrniRecepte() {
@@ -82,5 +82,36 @@ public class ReceptController {
         response.setSeznamSestavin(seznamSestavin);
 
         return response;
+    }
+
+    @GetMapping("/po-oceni")
+    public Iterable<Recept> vrniReceptePoOceni() {
+        Iterable<Recept> vsiRecepti = receptDao.findAll();
+
+        // Sortiranje receptov po povprečni oceni od najvišje do najnižje
+        List<Recept> urejeniRecepti = StreamSupport.stream(vsiRecepti.spliterator(), false)
+                .sorted((r1, r2) ->
+                        Double.compare(povprecnaOcenaRecepta(r2), povprecnaOcenaRecepta(r1)))
+                .collect(Collectors.toList());
+
+        return urejeniRecepti;
+    }
+
+    private double povprecnaOcenaRecepta(Recept recept) {
+        // Pridobitev vseh ocen za določen recept
+        List<Ocena> oceneRecepta = ocenaDao.findByReceptId(recept.getId());
+
+        // Če recept nima ocen, vrnemo povprečje 0
+        if (oceneRecepta.isEmpty()) {
+            return 0.0;
+        }
+
+        // Izračun povprečne ocene
+        double povprecnaOcena = oceneRecepta.stream()
+                .mapToInt(Ocena::getOcena)
+                .average()
+                .orElse(0.0);
+
+        return povprecnaOcena;
     }
 }

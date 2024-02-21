@@ -8,7 +8,6 @@ import si.um.feri.kuham_si.models.Recept;
 import si.um.feri.kuham_si.models.Uporabnik;
 import si.um.feri.kuham_si.repository.ReceptRepository;
 import si.um.feri.kuham_si.models.dto.OcenaRequest;
-import si.um.feri.kuham_si.models.dto.OcenaResponse;
 import si.um.feri.kuham_si.repository.OcenaRepository;
 import si.um.feri.kuham_si.repository.UporabnikRepository;
 import org.springframework.web.bind.annotation.CrossOrigin;

@@ -22,6 +22,7 @@ const Recepti = () => {
   const [priljubljeni, setPriljubljeni] = useState([]);
   const [filterUporabnik, setFilterUporabnik] = useState(false);
   const [filterKuhar, setFilterKuhar] = useState(false);
+  const [sortByRating, setSortByRating] = useState(false);
 
   const pridobiPriljubljene = () => {
     const userId = sessionStorage.getItem("userId");
@@ -39,24 +40,39 @@ const Recepti = () => {
     }
   };
 
-  useEffect(() => {
-    const pridobiRecepte = () => {
-      api.get("/recept").then((response) => {
-        setRecepti(response.data);
-      });
-    };
+  const pridobiRecepte = () => {
+    api.get("/recept").then((response) => {
+      setRecepti(response.data);
+    });
+  };
 
+  useEffect(() => {
     pridobiRecepte();
     pridobiPriljubljene();
   }, []);
 
+  useEffect(() => {
+    if (sortByRating) {
+      pridobiReceptePoOceni();
+    } else {
+      pridobiRecepte();
+    }
+  }, [sortByRating]);
+
+  const pridobiReceptePoOceni = () => {
+    api.get("/recept/po-oceni").then((response) => {
+      setRecepti(response.data);
+    });
+  };
+
+
   function generate() {
     let filteredRecepti = recepti;
-  
+
     if (filterUporabnik) {
       filteredRecepti = filteredRecepti.filter(recept => recept.avtor.tipUporabnika === 'Uporabnik');
     }
-  
+
     if (filterKuhar) {
       filteredRecepti = filteredRecepti.filter(recept => recept.avtor.tipUporabnika === 'Kuhar');
     }
@@ -147,6 +163,7 @@ const Recepti = () => {
             setFilterUporabnik(!filterUporabnik);
           }}>Prikaži uporabnikove recepte</button>
           <button onClick={() => setFilterKuhar(!filterKuhar)}>Prikaži kuharjeve recepte</button>
+          <button onClick={() => setSortByRating(!sortByRating)}>Razvrsti po oceni</button>
           <div style={{ display: "flex", flexWrap: "wrap" }}>{generate()}</div>
         </div>
       </div>
