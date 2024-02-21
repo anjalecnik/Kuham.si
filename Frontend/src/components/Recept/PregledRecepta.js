@@ -16,19 +16,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { TextField, Button } from "@mui/material";
-
-
-
-
-
-
+import { Button } from "@mui/material";
 
 
 const PregledRecepta = () => {
   const [recept, setRecept] = useState([]);
   const [sestavine, setSestavine] = useState([]);
   const [ocene, setOcene] = useState([]);
+  const [sortByRatingAscending, setSortByRatingAscending] = useState(true);
 
   const [sumENERC_KCAL, setSumENERC_KCAL] = useState(0);
   const [sumFAT, setSumFAT] = useState(0);
@@ -84,16 +79,31 @@ const PregledRecepta = () => {
       const idRecepta = new URL(window.location.href).pathname.split("/").pop();
 
       api
-        .get(`ocena/pridobi-ocene-za-recept?receptId=${idRecepta}`
-        )
+        .get(`ocena/pridobi-ocene-za-recept?receptId=${idRecepta}`)
         .then((response) => {
-          setOcene(response.data);
+          // Preverjanje, ali je potrebno razvrščanje ocen
+          const sortedOcene = [...response.data];
+          if (!sortByRatingAscending) {
+            sortedOcene.sort((a, b) => b.ocena - a.ocena); // Razvrsti ocene od najvišje do najnižje
+          } else {
+            sortedOcene.sort((a, b) => a.ocena - b.ocena); // Razvrsti ocene od najnižje do najvišje
+          }
+          setOcene(sortedOcene);
         });
-    }
+    };
 
     pridobiOcene();
     pridobiRecept();
-  }, []);
+  }, [sortByRatingAscending]);
+
+  const sortByRatingAscendingHandler = () => {
+    setSortByRatingAscending(true);
+  };
+
+  // Funkcija za obravnavo pritiska na gumb za razvrščanje ocen od najvišje do najnižje
+  const sortByRatingDescendingHandler = () => {
+    setSortByRatingAscending(false);
+  };
 
   const dodajOceno = () => {
     const idRecepta = new URL(window.location.href).pathname.split("/").pop();
@@ -115,7 +125,6 @@ const PregledRecepta = () => {
   };
 
   const brisiOcena = (id) => {
-    const idRecepta = new URL(window.location.href).pathname.split("/").pop();
 
     api
       .delete(`/ocena/ocena/izbrisi-oceno/${id}`)
@@ -133,8 +142,7 @@ const PregledRecepta = () => {
       console.error("Napaka: Nova ocena mora biti med 1 in 5.");
       return;
     }
-  
-    const idRecepta = new URL(window.location.href).pathname.split("/").pop();
+
     api
       .put(`/ocena/ocena/posodobi-oceno/${editedOcenaId}`, {
         novaOcena: parseInt(novaOcena),
@@ -143,7 +151,7 @@ const PregledRecepta = () => {
       .then((response) => {
         console.log("Ocena posodobljena:", response.data);
         window.location.reload();
-        }
+      }
       )
       .catch((error) => {
         console.error("Napaka pri posodabljanju ocene:", error);
@@ -241,23 +249,32 @@ const PregledRecepta = () => {
             </div><br />
 
             <div style={{ clear: "both", marginLeft: "10px", marginBottom: "20px" }}>
-            {sessionStorage.getItem("userId") && (
-    <>
-              <h2>Dodaj komentar</h2>
-              <form style={{ display: "flex", flexDirection: "column", maxWidth: "300px" }}>
-                <label htmlFor="komentar">Komentar:</label>
-                <textarea id="komentar" name="fname" style={{ marginBottom: "10px" }}></textarea>
+              {sessionStorage.getItem("userId") && (
+                <>
+                  <h2>Dodaj komentar</h2>
+                  <form style={{ display: "flex", flexDirection: "column", maxWidth: "300px" }}>
+                    <label htmlFor="komentar">Komentar:</label>
+                    <textarea id="komentar" name="fname" style={{ marginBottom: "10px" }}></textarea>
 
-                <label htmlFor="quantity">Ocena med 1 in 5:</label>
-                <input type="number" id="ocena" name="quantity" min="1" max="5" style={{ marginBottom: "10px" }} />
+                    <label htmlFor="quantity">Ocena med 1 in 5:</label>
+                    <input type="number" id="ocena" name="quantity" min="1" max="5" style={{ marginBottom: "10px" }} />
 
-                <Button variant="contained" color="success" onClick={dodajOceno}>
-                  DODAJ
-                </Button>
-              </form>
-              </>
-               )}
+                    <Button variant="contained" color="success" onClick={dodajOceno}>
+                      DODAJ
+                    </Button>
+                  </form>
+                </>
+              )}
             </div>
+
+            <Button onClick={sortByRatingAscendingHandler} variant="contained" color="primary">
+              Razvrsti ocene od najnižje do najvišje
+            </Button>
+
+            {/* Gumb za razvrščanje ocen od najvišje do najnižje */}
+            <Button onClick={sortByRatingDescendingHandler} variant="contained" color="primary">
+              Razvrsti ocene od najvišje do najnižje
+            </Button>
 
             <div style={{ marginLeft: 0, maxWidth: "800px" }}>
               <h3>Pregled ocen</h3>
@@ -281,89 +298,89 @@ const PregledRecepta = () => {
                       <p>Datum: {ocena.datum}</p>
                     </div>
                     {ocena.avtor && ocena.avtor.id === parseInt(sessionStorage.getItem("userId"), 10) && (
-  
-                    <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                      <button
-                        style={{
-                          background: "#ff4d4d",
-                          color: "#fff",
-                          padding: "8px 15px",
-                          border: "none",
-                          borderRadius: "5px",
-                          cursor: "pointer",
-                          marginRight: "10px",
-                        }}
-                        onClick={() => brisiOcena(ocena.id)}
-                      >
-                        Izbriši
-                      </button>
 
-                      <button
-                        style={{
-                          background: "#ffd633",
-                          color: "#fff",
-                          padding: "8px 15px",
-                          border: "none",
-                          borderRadius: "5px",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => {
-                          setEditMode(true);
-                          setEditedOcenaId(ocena.id);
-                        }}
-                      >
-                        Posodobi
-                      </button>
-                      {editMode && (
-                        <div style={{ marginLeft: 0, maxWidth: "800px" }}>
-                          <h3>Posodobi oceno</h3>
-                          <form>
-                            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                              <label htmlFor="komentar">Komentar:</label>
-                              <textarea
-                                id="komentar"
-                                name="komentar"
-                                value={komentar}
-                                onChange={(e) => setKomentar(e.target.value)}
-                                style={{ width: "90%" }}
-                              ></textarea>
-                            </div>
+                      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                        <button
+                          style={{
+                            background: "#ff4d4d",
+                            color: "#fff",
+                            padding: "8px 15px",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            marginRight: "10px",
+                          }}
+                          onClick={() => brisiOcena(ocena.id)}
+                        >
+                          Izbriši
+                        </button>
 
-                            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                              <label htmlFor="novaOcena">Nova ocena (1-5):</label>
-                              <input
-                                type="number"
-                                id="novaOcena"
-                                name="novaOcena"
-                                min="1"
-                                max="5"
-                                value={novaOcena}
-                                onChange={(e) => setNovaOcena(e.target.value)}
-                                style={{ width: "90%" }}
-                              />
-                            </div>
+                        <button
+                          style={{
+                            background: "#ffd633",
+                            color: "#fff",
+                            padding: "8px 15px",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => {
+                            setEditMode(true);
+                            setEditedOcenaId(ocena.id);
+                          }}
+                        >
+                          Posodobi
+                        </button>
+                        {editMode && (
+                          <div style={{ marginLeft: 0, maxWidth: "800px" }}>
+                            <h3>Posodobi oceno</h3>
+                            <form>
+                              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+                                <label htmlFor="komentar">Komentar:</label>
+                                <textarea
+                                  id="komentar"
+                                  name="komentar"
+                                  value={komentar}
+                                  onChange={(e) => setKomentar(e.target.value)}
+                                  style={{ width: "90%" }}
+                                ></textarea>
+                              </div>
 
-                            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                              <button
-                                type="button"
-                                style={{
-                                  background: "blue",
-                                  color: "#fff",
-                                  padding: "8px 15px",
-                                  border: "none",
-                                  borderRadius: "5px",
-                                  cursor: "pointer",
-                                  marginTop: "10px",
-                                }}
-                                onClick={posodobiOcena}
-                              >
-                                Potrdi
-                              </button>
-                            </div>
-                          </form>
-                        </div>
-                      )}
-                    </div>
+                              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+                                <label htmlFor="novaOcena">Nova ocena (1-5):</label>
+                                <input
+                                  type="number"
+                                  id="novaOcena"
+                                  name="novaOcena"
+                                  min="1"
+                                  max="5"
+                                  value={novaOcena}
+                                  onChange={(e) => setNovaOcena(e.target.value)}
+                                  style={{ width: "90%" }}
+                                />
+                              </div>
+
+                              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                                <button
+                                  type="button"
+                                  style={{
+                                    background: "blue",
+                                    color: "#fff",
+                                    padding: "8px 15px",
+                                    border: "none",
+                                    borderRadius: "5px",
+                                    cursor: "pointer",
+                                    marginTop: "10px",
+                                  }}
+                                  onClick={posodobiOcena}
+                                >
+                                  Potrdi
+                                </button>
+                              </div>
+                            </form>
+                          </div>
+                        )}
+                      </div>
                     )}
                   </div>
                 ))}
