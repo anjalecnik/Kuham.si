@@ -20,6 +20,8 @@ import { Link } from "react-router-dom";
 const Recepti = () => {
   const [recepti, setRecepti] = useState([]);
   const [priljubljeni, setPriljubljeni] = useState([]);
+  const [filterUporabnik, setFilterUporabnik] = useState(false);
+  const [filterKuhar, setFilterKuhar] = useState(false);
 
   const pridobiPriljubljene = () => {
     const userId = sessionStorage.getItem("userId");
@@ -49,7 +51,16 @@ const Recepti = () => {
   }, []);
 
   function generate() {
-    return recepti.map((recept, index) => (
+    let filteredRecepti = recepti;
+  
+    if (filterUporabnik) {
+      filteredRecepti = filteredRecepti.filter(recept => recept.avtor.tipUporabnika === 'Uporabnik');
+    }
+  
+    if (filterKuhar) {
+      filteredRecepti = filteredRecepti.filter(recept => recept.avtor.tipUporabnika === 'Kuhar');
+    }
+    return filteredRecepti.map((recept, index) => (
       <div key={index} style={{ flexBasis: "20vw", margin: "8px" }}>
         <Card sx={{ width: "26vw" }} key={index}>
           <CardHeader
@@ -132,6 +143,10 @@ const Recepti = () => {
       <div className="content">
         <div>
           <h1>Seznam vseh receptov</h1>
+          <button onClick={() => {
+            setFilterUporabnik(!filterUporabnik);
+          }}>Prikaži uporabnikove recepte</button>
+          <button onClick={() => setFilterKuhar(!filterKuhar)}>Prikaži kuharjeve recepte</button>
           <div style={{ display: "flex", flexWrap: "wrap" }}>{generate()}</div>
         </div>
       </div>
