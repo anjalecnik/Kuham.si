@@ -16,6 +16,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Dish from "../../assets/img/food-plate-vector-png-file-hd.png";
 import { Link } from "react-router-dom";
+import VerifiedIcon from '@mui/icons-material/Verified';
 
 const Recepti = () => {
   const [recepti, setRecepti] = useState([]);
@@ -94,7 +95,7 @@ const Recepti = () => {
               <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
                 {recept.avtor.uporabniskoIme.charAt(0)}
               </Avatar>
-            }
+              }
             action={
               <IconButton aria-label="settings">
                 <MoreVertIcon />
@@ -103,6 +104,7 @@ const Recepti = () => {
             title={recept.naziv}
             subheader={recept.avtor.uporabniskoIme}
           />
+          {recept.naziv === "Kuharjev" && <VerifiedIcon style={{ marginLeft: "20px" }} />}
           <Link to={`/recepti/${recept.id}`} style={{ textDecoration: "none" }}>
             <CardMedia
               component="img"
